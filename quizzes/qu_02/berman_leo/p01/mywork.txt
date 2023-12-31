@@ -1,0 +1,3 @@
+ece-000_[1]: find /data/courses/ece_1111/resources/reports -type f -exec grep -lR "ECE 1111 is a great class" {} \;
+/data/courses/ece_1111/resources/reports/045/0045147/s01_2009_12_23/00010277_s01.txt
+

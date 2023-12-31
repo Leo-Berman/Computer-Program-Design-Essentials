@@ -1,0 +1,52 @@
+//Leo Berman Edits To Part of The Lab
+
+// file: $(ECE_1111)/labs/01/l01_01/myprog.cc
+//
+// revision history:
+//  20180724 (JP): initial version
+//
+// usage:
+//  myprog.exe
+//
+// compilation:
+//  g++ -o myprog.exe myprog.cc
+//
+// expected output:
+//  nedc_000_[1]: myprog.exe
+//  program name: myprog.exe
+//   sum of 27 and 27.272699 is 54.272697
+//
+// This is a simple C program where all the code exists in one file.
+// This version was designed to demonstrate the basic features of
+// the Amazon AWS IDE.
+//
+
+// system include files
+//
+#include <stdio.h>
+
+// main: myprog
+//
+// This is a driver program that does some very simple things.
+//
+int main(int argc, const char** argv) {
+
+  // declare a variable for status
+  //
+  int status = (int)0;
+  
+  // declare some variables
+  //
+  long i = 27;
+  float x = 27.2727;
+  int cool = 0;
+  
+  // display a message to the terminal
+  //
+  fprintf(stdout, "program name: %s\n", argv[0]);
+  fprintf(stdout, " sum of %d and %f is %f\n", i, x, i + x);
+
+  // exit gracefully
+  //
+  return(status);
+}

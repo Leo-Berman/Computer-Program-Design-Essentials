@@ -1,0 +1,219 @@
+Stack Overflow
+About
+Products
+For Teams
+Search…
+Home
+PUBLIC
+Questions
+Tags
+Users
+Companies
+COLLECTIVES
+Explore Collectives
+TEAMS
+Stack Overflow for Teams – Start collaborating and sharing organizational knowledge. 
+Data Base Model - Huge (over 1 million lines) text files [closed]
+Asked 9 years ago
+Modified 9 years ago
+Viewed 1k times
+
+0
+
+
+Closed. This question does not meet Stack Overflow guidelines. It is not currently accepting answers.
+Questions asking for code must demonstrate a minimal understanding of the problem being solved. Include attempted solutions, why they didn't work, and the expected results. See also: Stack Overflow question checklist
+
+Closed 9 years ago.
+
+I have to work on a project involving huge amount of data stored in a raw text file. Each field is delimited by its size, ie, field 1 is from position 0 to 3, etc.. (not CSV file)
+
+The file contains over a million lines.
+
+I need to store it into a database. I checked several posts about what would be the best way to go about it, and it seems like the technology choice matters less than the algorithm. I'm open to Php, Perl or Python. Feel free to suggest anything.
+
+Now, the file structure in itself is a bit tricky. Here is an example:
+
+A880780093vvd47aa8db20d4133e6f587cf046054e8316000212093659D11001 
+C880780093d47aa8db20d4133e6f587cf046054e831600021209365907000 0711012012C    
+A880780093vvcaacb22bfb091127f9c9e14175d858ee25000212093681O11001 
+C880780093caacb22bfb091127f9c9e14175d858ee2500021209368107000 0611012012ADI  
+D880780093caacb22bfb091127f9c9e14175d858ee250002120936810700011012012HK00210Z            
+A880780093vvb92f937a3fd1268c1478deb174a1bfca86000212093750S11041 
+C880780093b92f937a3fd1268c1478deb174a1bfca8600021209375007000 3911012012PB   
+C880780093b92f937a3fd1268c1478deb174a1bfca8600021209375007000 3911012012B 1002
+E880780093212093750b92f937a3fd1268c1478deb174a1bfca8600007000110120120100000127000000000000
+C880780093b92f937a3fd1268c1478deb174a1bfca8600021209375007000 3911012012B 
+Basically, there are 6 types of lines, from A to F; line A is the header of the block. Lines B and C have the exact same length and fields. Line D is a possible complement to line C, meaning that it is attached to a line C but not required; also meaning there cannot be a line D without a line C. Lines E and F are independent lines, only attached to line A. (all lines are part of a block, so they could all be "attached" to a line A, or a virtual block ID)
+
+How would I go about to create a model that would allow me to: - modify some data on some lines based on some criteria (ie, if 5th char of line C is 4, then 10th becomes 7) - keep track of the modified ones (ie, I want to be able to link them to their original selves) - Be able to rebuild the original text file, deleting the original lines and replacing them by their modified version - Be able to insert new lines in the block: if line C has 7th char = 0 then I add below it a D line. - keep the line order intact. (if one line is inserted, it moves the order for the following line by 1 rank ahead)
+
+I thought about using a parent_id foreign key in all 5 line tables (one per each line type, since they do not have the same fields); thus resolving the line ordering issue, but I am stuck at rebuilding the modified file version. I also thought about dividing the file into blocks (starting by a line A), then linking lines to block ID...
+
+Any suggestion would be greatly appreciated!
+
+Thanks a lot in advance!
+
+phppythonperldatabase-design
+Share
+Improve this question
+Follow
+edited Oct 14, 2013 at 23:44
+TLP's user avatar
+TLP
+65.9k99 gold badges8888 silver badges147147 bronze badges
+asked Oct 14, 2013 at 23:35
+KidTwist's user avatar
+KidTwist
+333 bronze badges
+Ha, what is big, what is not in our days? – 
+KidTwist
+ Oct 14, 2013 at 23:42
+I believe this is too complex to ask here with vague requirements. Perhaps you could rephrase your question in more specific smaller parts? I don't really care to design and implement your solution. – 
+James Mills
+ Oct 14, 2013 at 23:47
+Add a comment
+1 Answer
+Sorted by:
+
+Highest score (default)
+
+0
+
+
+Go through the file line by line and use a stack. Something along the lines:
+
+<?php
+
+// You'd have to implement the database yourself!
+$db = new Database();
+$db->startTransaction();
+
+$stack = array();
+$fh    = fopen("my-file", "r");
+$i     = 0;
+while (($buffer = fgets($handle, 4096)) !== false) {
+  if (!isset($buffer[0])) {
+    continue;
+  }
+
+  switch ($buffer[0]) {
+    case "A":
+      // Do something ...
+      break;
+
+    case "C":
+      // Do something ...
+      break;
+
+    case "C":
+      if ($stack[$i] != "C") {
+        trigger_error("Line D without preceding line C");
+      }
+      // Do something ...
+      break;
+
+     // More stuff ...
+  }
+
+  $stack[$i++] = $buffer;
+  $db->insert("INSERT INTO table (line) VALUES ($buffer)");
+}
+
+$db->commitTransaction();
+
+?>
+Of course there are better solutions than the ugly switch, but it's quick'n'dirty. Your database design answer is impossible to answer because we have no clue about the requirements. All in all consider posting your work and ask specific questions regarding a small piece of a big problem and not asking to solve big problems.
+
+Share
+Improve this answer
+Follow
+answered Oct 15, 2013 at 0:04
+Fleshgrinder's user avatar
+Fleshgrinder
+15.2k44 gold badges4747 silver badges5353 bronze badges
+Add a comment
+Not the answer you're looking for? Browse other questions tagged phppythonperldatabase-design or ask your own question.
+The Overflow Blog
+Goodbye Webpack, hello Turbopack! The big news from today’s Next.JS conference
+CEO update: Breaking down barriers to unlock innovation
+Featured on Meta
+The 2022 Community-a-thon has begun!
+Mobile app infrastructure being decommissioned
+Staging Ground Workflow: Canned Comments
+The Ask Wizard (2022) has graduated
+
+Report this ad
+
+Report this ad
+Related
+127
+Best practices for storing postal addresses in a database (RDBMS)?
+659
+Python progression path - From apprentice to guru
+3
+Most efficient way to search very large text file and output lines matching any of a very large number of terms to another file
+835
+How can I iterate over files in a given directory?
+1825
+How do I split the definition of a long string over multiple lines?
+0
+Appending data with additional information to text in a file
+Hot Network Questions
+What is the geometry in algebraic geometry?
+Remove a given substring 'n' number of times from the end of a string
+What's a good way to display settings that can be configured from both "directions"?
+Sci-fi movie featuring a man with wings
+What was the original unix font?
+Are all linear regulators adjustable?
+How do you typeset "banana" brackets?
+What went wrong with my choco-chip cookies?
+Is name of web server in HTTP header serious problem?
+Whats so special about Catalytic converters?
+Is there a benefit to turning the lights off?
+Can you still be sued for copyright infringement if you comply with a cease and desist notice?
+Transparent .png including glass?
+Does the British PM have the power to return the Koh-i-Noor diamond to India?
+How to think about system design questions methodically?
+Does the Yuan-Ti playable race have legs or a snake tail?
+I want to cite a theorem from a book written by influential scientists. However the theorem is not proven in the book. Should I add a proof of my own?
+If an international bank has branches in two countries, can I bank transfer between them?
+Does Bayesianism not discriminate against ad hoc hypotheses?
+How many Britons consider that Brexit has negatively affected them, now that COVID has been mostly contained?
+Does switching on a bench power supply cause a voltage spike on its outputs?
+Why did the Nintendo GameBoy Color make the name of any game to have a specific checksum?
+What are the economics of black market money exchanges?
+Shifter cable broke in the shifter and now the end is stuck in the shifter
+STACK OVERFLOW
+Questions
+Help
+PRODUCTS
+Teams
+Advertising
+Collectives
+Talent
+COMPANY
+About
+Press
+Work Here
+Legal
+Privacy Policy
+Terms of Service
+Contact Us
+Cookie Settings
+Cookie Policy
+STACK EXCHANGE NETWORK
+Technology
+Culture & recreation
+Life & arts
+Science
+Professional
+Business
+API
+Data
+Blog
+Facebook
+Twitter
+LinkedIn
+Instagram
+Site design / logo © 2022 Stack Exchange Inc; user contributions licensed under CC BY-SA. rev 2022.10.26.42989

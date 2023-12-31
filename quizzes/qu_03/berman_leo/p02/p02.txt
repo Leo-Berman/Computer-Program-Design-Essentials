@@ -1,0 +1,6 @@
+od -c -t d1 /data/courses/ece_1111/current/quizzes/qu_03/picone_joseph/example.txt
+0000000   \n
+          10
+0000001
+
+The bits are set to represent the significant numerical represenations we learned aobut in the ascii table.  This 10 correlates to a new line character which is why the test file appears empty.  My answer makes sense as it list the character representation as it sees it which is \n the corresponding text value which means insert new line. Essentially, despite the text file appearin empty there is still a bit of information in the file which corresponds to the new line character.  These "unprintable" characters as seen in the ascii table are importnat as they contribute to the information of a file and it's important to have an understanding of this as it's fundamental to the understanding of information as bits and bytes.

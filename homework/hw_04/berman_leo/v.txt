@@ -1,0 +1,7 @@
+# an example file
+#
+this is a sample file
+27.0
+another line of text
+3
+yet another line of text

@@ -1,0 +1,2 @@
+The name of my program is sum27.
+The value of sum is 27.0 

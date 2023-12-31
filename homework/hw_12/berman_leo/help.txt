@@ -1,0 +1,8 @@
+*********************************************************
+
+There has been an error in the program or you have used
+the help command
+
+usage - python hw12.py "compare word" "File1" "File2" ...
+
+*********************************************************

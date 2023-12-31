@@ -1,0 +1,5 @@
+the quick brown fox
+the slow brown fox
+the medium brown fox
+the fast brown fox
+the lethargic brown fox
